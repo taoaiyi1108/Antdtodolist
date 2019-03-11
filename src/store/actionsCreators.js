@@ -1,4 +1,4 @@
-import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM } from './actionTypes';
+import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, INTI_LIST_ACTION, GET_INIT_LIST } from './actionTypes';
 
 export const getInputChangeAction = (value) => ({
     type: CHANGE_INPUT_VALUE,
@@ -10,6 +10,28 @@ export const getAddItemAction = () => ({
 })
 
 export const getDeleteItemAction = (index) => ({
-    type: ADD_TODO_ITEM,
+    type: DELETE_TODO_ITEM,
     index
+})
+
+export const initListAction = (data) => ({
+    type: INTI_LIST_ACTION,
+    data
+})
+
+/* Redux-thunk */
+/* export const getTodoList = () => {
+    return (dispatch) => {
+        axios.get('/todolist.json').then(res => {
+            const data = res.data;
+            const action = initListAction(data);
+            dispatch(action);
+        }).catch((res) => {
+            console.log(res)
+        });
+    }
+} */
+
+export const getInitList = () => ({
+    type: GET_INIT_LIST
 })

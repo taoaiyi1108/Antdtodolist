@@ -130,3 +130,45 @@ export default (state = defaultState, action) => {
  export const ADD_TODO_ITEM = "add_todo_item";
  export const DELETE_TODO_ITEM = "delete_todo_item";
 ```
+
+#### Redux-thunk 中间件
+- 只有在使用了thunk中间件之后action才可以是一个函数
+- 解决react中的异步请求，提取到了action中进行
+```javascript
+/* store 配置 */
+import { createStore, applyMiddleware, compose } from 'redux';
+import reducer from './reducer';
+import thunk from 'redux-thunk';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
+const enhancer = composeEnhancers(applyMiddleware(thunk));
+const store = createStore(reducer, enhancer);
+
+export default store;
+```
+```javascript
+/* actionCreator.js */
+export const getTodoList = () => {
+    return (dispatch) => {
+        axios.get('/todolist.json').then(res => {
+            const data = res.data;
+            const action = initListAction(data);
+            dispatch(action);
+        }).catch((res) => {
+            console.log(res)
+        });
+    }
+}
+```
+```javascript
+/* Todolist.js */
+import { getTodoList } from 'actionCreator.js'
+
+componentDidMount() {
+    const action = getTodoList();
+    store.dispatch(action);
+}
+```
+
+#### Redux-saga 中间件
+- 使用Redux-saga 完全代替 Redux-thunk

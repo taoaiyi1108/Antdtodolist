@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import 'antd/dist/antd.css';
-import { Input, Button, List } from 'antd';
 import store from './store';
-import { getInputChangeAction, getAddItemAction, getDeleteItemAction } from './store/actionsCreators';
+import { getInputChangeAction, getAddItemAction, getDeleteItemAction, getInitList } from './store/actionsCreators';
 // import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM } from './store/actionTypes'
+import TodoListUI from './TodoListUI';
+
+
 
 
 class Todolist extends Component {
@@ -13,27 +15,23 @@ class Todolist extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleStoreChange = this.handleStoreChange.bind(this);
         this.handleBtnClick = this.handleBtnClick.bind(this);
+        this.handleDeleteItemClick = this.handleDeleteItemClick.bind(this);
         /* 只要store中的数据发生改变，subscribe函数就会被调用 */
         store.subscribe(this.handleStoreChange);
     }
     render() {
-        return (
-            <div style={{ margin: '10px' }}>
-                <Input
-                    value={this.state.inputValue}
-                    placeholder="todo info"
-                    style={{ width: '300px', marginRight: '10px' }}
-                    onChange={this.handleInputChange}
-                />
-                <Button type="primary" onClick={this.handleBtnClick}>提交</Button>
-                <List
-                    style={{ marginTop: '10px', width: '300px' }}
-                    bordered
-                    dataSource={this.state.list}
-                    renderItem={(item, index) => (<List.Item onClick={this.handleItemClick.bind(this, index)}>{item}</List.Item>)}
-                />
-            </div>
-        )
+        return <TodoListUI
+            inputValue={this.state.inputValue}
+            list={this.state.list}
+            handleInputChange={this.handleInputChange}
+            handleBtnClick={this.handleBtnClick}
+            handleDeleteItemClick={this.handleDeleteItemClick}
+        />
+    }
+
+    componentDidMount() {
+        const action = getInitList();
+        store.dispatch(action);
     }
 
     handleInputChange(e) {
@@ -53,7 +51,7 @@ class Todolist extends Component {
         store.dispatch(action);
     }
 
-    handleItemClick(index) {
+    handleDeleteItemClick(index) {
         /* const action = {
             type: DELETE_TODO_ITEM,
             index
